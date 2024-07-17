@@ -2,8 +2,14 @@ using Backend.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Backend.Repositories;
+using Backend.Config;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddJsonFile("appsettings.json");
+
+builder.Services.Configure<AppSettings>(
+    builder.Configuration.GetSection(nameof(AppSettings)));
 
 builder.Services.AddControllers();
 
