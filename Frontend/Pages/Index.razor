@@ -1,0 +1,46 @@
+﻿@page "/"
+@using System.ComponentModel.DataAnnotations;
+@using Microsoft.AspNetCore.Components.Web
+
+<div class="intro-background">
+    <div class="content">
+        <h1>Welcome to the Ultimate VAT Verification Tool</h1>
+
+        <div class="intro-container">
+            <p>
+                Welcome to My comprehensive VAT Verification Tool, your one-stop solution for verifying european (EU) Value Added Tax (VAT) numbers with ease and accuracy. Whether you are a business owner, accountant, tax professional (or hopefully my new employer), my tool is designed to help you ensure compliance and streamline your operations.
+            </p>
+            <h2>Why Use My VAT Verification Tool?</h2>
+            <ul>
+                <li><strong>Accuracy:</strong> My tool leverages the latest EU VAT databases to ensure that the information you receive is accurate and up-to-date.</li>
+                <li><strong>Ease of Use:</strong> Simply enter the VAT number and country code or the full VAT number, and let my tool do the rest.</li>
+                <li><strong>Speed:</strong> Receive instant verification results, saving you time and effort.</li>
+                <li><strong>Reliability:</strong> Designed to handle high volumes of requests, my tool ensures that you get reliable results every time!</li>
+            </ul>
+            <h2>How to Get Started</h2>
+            <p>
+                Getting started with my VAT Verification Tool is simple. Follow these easy steps:
+            </p>
+            <ol>
+                <li>Navigate to the VAT Verification page using the menu or the button below.</li>
+                <li>Enter the VAT number and country code, or alternatively, enter the full VAT number.</li>
+                <li>Click the "Verify" button to receive instant verification results.</li>
+            </ol>
+            <p>
+                I am committed to providing you with the best possible experience in this silly little demonstration. If you have any questions, please do not hesitate to contact Dennis!
+            </p>
+            <button class="btn btn-primary" @onclick="NavigateToVatVerification">Start Verifying VAT Numbers</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    private void NavigateToVatVerification()
+    {
+        NavigationManager.NavigateTo("/vatverification");
+    }
+
+}

@@ -1,0 +1,194 @@
+﻿@page "/vatverification"
+@using System.ComponentModel.DataAnnotations;
+
+<h3>VAT Verification</h3>
+
+<div class="form-container">
+    <div class="form-group">
+        <label for="vatInput">Enter VAT Number:</label>
+        <input id="vatInput" @bind="vatNumber" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="vatCC">Enter VAT Country Code:</label>
+        <input id="vatCC" @bind="countryCode" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="vat">Alternatively, enter full VAT:</label>
+        <input id="vat" @bind="vat" class="form-control" />
+    </div>
+    <button @onclick="VerifyVat" class="btn btn-primary">Verify</button>
+</div>
+<style>
+    .form-container, .result-container {
+        max-width: 600px;
+        margin: 0 auto;
+        margin-top:3%;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .valid {
+        color: green;
+    }
+
+    .invalid {
+        color: red;
+    }
+
+    .unavailable {
+        color: orange;
+    }
+
+    .error {
+        color: darkred;
+    }
+
+    /* Spinner styles */
+    .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border-left-color: #07d;
+        animation: spin 1s ease infinite;
+        margin: 20px auto;
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
+@if (isLoading)
+{
+    <div class="spinner"></div>
+}
+
+@if (verificationResult != null)
+{
+    <div class="result-container">
+        <h4>Verification Result:</h4>
+        @if (verificationResult == 0)
+        {
+            <p class="valid">Valid VAT Number</p>
+        }
+        else if (verificationResult == 1)
+        {
+            <p class="invalid">Invalid VAT Number</p>
+        }
+        else if (verificationResult == 2)
+        {
+            <p class="unavailable">Verification Unavailable</p>
+        }
+        else
+        {
+            <p class="error">Error: Unknown response</p>
+        }
+    </div>
+}
+
+@code {
+    private string? vatNumber;
+
+    private string? countryCode;
+
+    private string? vat;
+
+    private int? verificationResult;
+
+    private bool isLoading = false;
+
+    private async Task VerifyVat()
+    {
+        isLoading = true;
+        verificationResult = null;
+        StateHasChanged();
+
+        if (!string.IsNullOrEmpty(vat))
+        {
+            if (vat.Length > 3)
+            {
+                countryCode = vat.Substring(0, 2);
+                vatNumber = vat.Substring(2);
+            }
+            else
+            {
+                verificationResult = 1;
+                isLoading = false;
+                StateHasChanged();
+                return;
+            }
+        }
+        else if (string.IsNullOrEmpty(countryCode) || string.IsNullOrEmpty(vatNumber))
+        {
+            verificationResult = 1;
+            isLoading = false;
+            StateHasChanged();
+            return;
+        }
+
+        string apiUrl = $"https://localhost:7243/Vat/VerifyVat?countryCode={countryCode}&vatId={vatNumber}";
+
+        using (var httpClient = new HttpClient())
+        {
+            var response = await httpClient.GetAsync(apiUrl);
+            var content = int.Parse(response.Content.ReadAsStringAsync().Result);
+
+            if (response.IsSuccessStatusCode && content.Equals(0))
+            {
+                string responseString = await response.Content.ReadAsStringAsync();
+                string numericResponse = new string(responseString.Where(char.IsDigit).ToArray());
+                verificationResult = int.TryParse(numericResponse, out int result) ? result : 2;
+            }
+            else if (response.IsSuccessStatusCode && content.Equals(1))
+            {
+                verificationResult = 1;
+            }
+            else
+            {
+                verificationResult = 2;
+            }
+        }
+        isLoading = false;
+        StateHasChanged();
+    }
+}
