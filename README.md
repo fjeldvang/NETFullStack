@@ -1,5 +1,5 @@
 # About
-ASP.NET Core Web API solution to demonstrate typical backend-frontend interaction. 
+.NET 7 Core Web API solution to demonstrate typical backend-frontend interaction. 
 Frontend is setup as a Blazor Server app.
 
 The project queries the EU VIES web service using SOAP protocol to verify VAT IDs input by the user, which is accessible through this API with a RESTful approach to architecture
@@ -21,3 +21,11 @@ easily be rectified in the Vatverification.razor component under Frontend -> Pag
 Run frontend while backend is running. 
 If both are running and the localhost port is correct in frontend, the frontend should send requests to the backend through the 
 input form found on the navbar to the left called "Verify VAT"
+
+# Project's use as a preset
+While the project is setup to simply use a single helper class doing SOAP queries to a web service as an endpoint, it can very easily be expanded by applying your business logic to the BackendService class and database queries to the BackendRepository.
+Two examples of this is provided with the hypothetical case of a travel agency and hypothetical endpoints in these classes.
+Better practice however would be to rename these or create new service(s) with their own responsibilities, and not just a general name like "backend" which is purely named as such for demonstration purposes. 
+These classes then as per .NET architecture will have to be added to the builder as transient services (or scoped/singletons depending on use) as demonstrated in the program.cs.
+Then, endpoints are to be made in the controller classes for the new methods in the service(s) you created.
+These will then appear in swagger UI and can be called. Any frontend of your choosing can then be made to interact with them.
