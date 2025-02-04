@@ -14,10 +14,10 @@ builder.Services.Configure<AppSettings>(
 builder.Services.AddControllers();
 
 // Repositories
-builder.Services.AddTransient<IBackendRepository, BackendRepository>();
+builder.Services.AddScoped<IBackendRepository, BackendRepository>();
 
 // Services
-builder.Services.AddTransient<IBackendService, BackendService>();
+builder.Services.AddScoped<IBackendService, BackendService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
