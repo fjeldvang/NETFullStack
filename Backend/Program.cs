@@ -17,7 +17,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IBackendRepository, BackendRepository>();
 
 // Services
-builder.Services.AddScoped<IBackendService, BackendService>();
+builder.Services.AddTransient<IBackendService, BackendService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
