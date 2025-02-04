@@ -5,10 +5,11 @@ namespace Backend.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class BackendController : Controller
+    public class BackendController : ControllerBase
     {
         private readonly IBackendRepository _backendRepository;
-        public BackendController(IBackendRepository backendRepository) {
+        public BackendController(IBackendRepository backendRepository) 
+        {
             _backendRepository = backendRepository;
         }
 

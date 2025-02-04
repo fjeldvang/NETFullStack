@@ -145,7 +145,8 @@
 
         if (!string.IsNullOrEmpty(vat))
         {
-            if (vat.Length > 3)
+            vat = vat.Trim();
+            if (vat.Length >= 8)
             {
                 countryCode = vat.Substring(0, 2);
                 vatNumber = vat.Substring(2);

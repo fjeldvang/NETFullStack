@@ -13,15 +13,20 @@ builder.Services.Configure<AppSettings>(
 
 builder.Services.AddControllers();
 
-// Repository
+// Repositories
 builder.Services.AddTransient<IBackendRepository, BackendRepository>();
 
-// Service
+// Services
 builder.Services.AddTransient<IBackendService, BackendService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddResponseCaching();
+
+// builder.Services.AddMemoryCache();
+
+// builder.Services.AddAuthentication().AddJwtBearer();
+// builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -35,8 +40,22 @@ app.UseHttpsRedirection();
 
 app.UseResponseCaching();
 
+// app.UseAuthentication();
+
 // app.UseAuthorization();
+
 
 app.MapControllers();
 
 app.Run();
+
+
+// TODO: Exception handling middleware (global exception handler?)
+
+// TODO: If frontend on different domains, add CORS
+
+// TODO: Add OpenAPI docs
+
+// TODO: Authentication and Authorization
+
+// TODO: Add server side caching to endpoint
